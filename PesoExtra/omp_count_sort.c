@@ -41,7 +41,7 @@ void Count_sort(int *a, int n, int threads)
 {
     int i, j, count;
     int *temp = malloc(n * sizeof(int));
-#pragma omp parallel num_threads(threads) private(i, j, count) shared(temp)
+#pragma omp parallel num_threads(threads) private(i, j, count) shared(temp) default(none)
     {
 #pragma omp for
         for (i = 0; i < n; i++)

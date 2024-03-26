@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <omp.h>
-#include <omp_llvm.h>
 /*
 compilar: gcc -g -Wall -fopenmp -o questao23 questao23.c
 executar: ./questao23 <numero_de_threads> <tamanho_do_vetor>
@@ -19,26 +18,14 @@ int main(int argc, char *argv[])
     int *iterations;
     iterations = (int *)malloc((tamanho + 1) * sizeof(int));
     omp_get_schedule(&sched, &chunksize);
-#pragma omp parallel for num_threads(num_threads)
-    {
+#pragma omp parallel num_threads(num_threads)
 
-        for (i = 0; i < tamanho; i++)
-        {
-            iterations[i] = omp_get_thread_num();
-        }
-        
-        #pragma omp single
-        switch(sched){
-            case omp_sched_static:
-            printf("\nEscalonamento: estatico, chunksize: %i", chunksize);
-            case omp_sched_auto:
-            printf("\nEscalonamento: auto, chunksize: %i", chunksize);
-            case omp_sched_guided:
-            printf("\nEscalonamento: guided, chunksize: %i", chunksize);
-            case omp_sched_dynamic:
-            printf("\nEscalonamento: dinamico, chunksize: %i", chunksize);
-        }
+#pragma omp for
+    for (i = 0; i < tamanho; i++)
+    {
+        iterations[i] = omp_get_thread_num();
     }
+
     Print_iters(iterations, tamanho);
     free(iterations);
 }
